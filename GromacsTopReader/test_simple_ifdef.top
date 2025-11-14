@@ -1,0 +1,24 @@
+; Minimal test for #ifdef in atoms section
+#define INCLUDE_EXTRA
+
+[ atomtypes ]
+C   12.0
+X   99.0
+
+[ moleculetype ]
+Test 1
+
+[ atoms ]
+1   C     1      RES     C1    1     0.0
+#ifdef INCLUDE_EXTRA
+2   X     1      RES     X1    1     0.0
+#endif
+
+[ bonds ]
+1 2
+
+[ system ]
+Test
+
+[ molecules ]
+Test 1

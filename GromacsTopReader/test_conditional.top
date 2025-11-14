@@ -1,0 +1,71 @@
+; Test topology file with conditional compilation directives
+; This demonstrates #define, #ifdef, #ifndef, #else, #endif support
+
+#define GO_VIRT
+#define USE_MARTINI
+
+[ defaults ]
+1 1 yes 1.0 1.0
+
+[ atomtypes ]
+; Test basic atom types
+C   12.0
+N   14.0
+O   16.0
+
+#ifdef GO_VIRT
+; This section should be included because GO_VIRT is defined
+[ atomtypes ]
+VG  72.0  ; Virtual site for GO model
+#endif
+
+#ifndef FLEXIBLE
+; This section should be included because FLEXIBLE is NOT defined
+[ atomtypes ]
+P1  72.0  ; Polar bead type 1
+#endif
+
+#ifdef USE_MARTINI
+; This is included because USE_MARTINI is defined
+[ atomtypes ]
+P4  72.0  ; Polar bead type 4
+#else
+; This would not be included
+[ atomtypes ]
+CHARMM_TYPE 12.0
+#endif
+
+#ifndef GO_VIRT
+; This section should be skipped because GO_VIRT IS defined
+[ atomtypes ]
+SKIP_ME 999.0  ; This should not appear
+#else
+; This ELSE branch should be taken instead
+[ atomtypes ]
+ELSE_TYPE 88.0  ; This should appear
+#endif
+
+[ moleculetype ]
+TestMol 1
+
+[ atoms ]
+;  nr  type  resnr  residu  atom  cgnr  charge  mass
+   1   C     1      MOL     C1    1     0.0     12.0
+   2   N     1      MOL     N1    1     0.0     14.0
+   3   O     1      MOL     O1    1     0.0     16.0
+#ifdef GO_VIRT
+   4   VG    1      MOL     V1    1     0.0     72.0
+#endif
+
+[ bonds ]
+1 2
+2 3
+#ifdef GO_VIRT
+3 4
+#endif
+
+[ system ]
+Test System with Conditionals
+
+[ molecules ]
+TestMol 1
